@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TradingView Alerts</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        ul {
+            list-style-type: none;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TradingView Alerts</h1>
+    <ul id="alerts"></ul>
+
+    <script>
+        var socket = io.connect('https://anteater-innocent-gladly.ngrok-free.app');  // Connect to the Socket.IO server
+
+        socket.on('new_data', function(data) {  // Listen for the 'new_data' event
+            var li = document.createElement('li');  // Create a new list item
+
+            // Use a loop to add all the properties in the data to the list item
+            for (var property in data) {
+                if (data.hasOwnProperty(property)) {
+                    li.textContent += `${property}: ${data[property]}, `;
+                }
+            }
+
+            document.getElementById('alerts').appendChild(li);  // Append the list item to the 'alerts' list
+        });
+    </script>
+</body>
+</html>
