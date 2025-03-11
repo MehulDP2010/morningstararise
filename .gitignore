@@ -6,3 +6,8 @@ __pycache__/
 .DS_Store
 .env
 *.sqlite3
+venv/
+__pycache__/
+flattrade_token.json
+market_data.db
+*.sqlite3

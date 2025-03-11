@@ -1,6 +1,7 @@
 from flask import Flask, redirect, request, jsonify
 import requests
 import hashlib
+from token_manager import save_token  # ✅ Add this import at the top
 
 # Flattrade API Details
 API_KEY = "030593bbaa3440548be24f9deb39f5ee"
@@ -39,7 +40,12 @@ def callback():
 
     if response.status_code == 200:
         token_data = response.json()
-        return f"<h3 style='color:green'>✅ Login successful! Access Token: {token_data.get('token')}</h3>"
+        access_token = token_data.get("token")
+
+        # ✅ Save token for future use
+        save_token(access_token)
+
+        return f"<h3 style='color:green'>✅ Login successful! Access Token: {access_token}</h3>"
     else:
         return f"<h3 style='color:red'>❌ Token Exchange Failed: {response.text}</h3>"
 
