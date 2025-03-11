@@ -22,7 +22,7 @@ TOKEN_FILE = "flattrade_token.json"
 # Route to start authentication
 @app.route("/")
 def login():
-    return redirect(AUTH_URL)
+    return "Flattrade OAuth Login Page"
 
 # Callback URL after Flattrade Login
 @app.route("/callback")
