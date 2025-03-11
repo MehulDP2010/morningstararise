@@ -9,13 +9,13 @@ API_SECRET = "2025.934665b7748a4027a5925557d954af7faaa5742f96c8e623"  # Your Fla
 CLIENT_ID = "FT050738"
 REDIRECT_URI = "https://morningstararise.onrender.com/callback"
 TOKEN_URL = "https://authapi.flattrade.in/oauth/token"
-https://authapi.flattrade.in/oauth/authorize?api_key=030593bbaa3440548be24f9deb39f5ee&redirect_uri=https://morningstararise.onrender.com/callback
+AUTH_URL = f"https://authapi.flattrade.in/oauth/authorize?api_key=030593bbaa3440548be24f9deb39f5ee&redirect_uri=https://morningstararise.onrender.com/callback"
 
 app = Flask(__name__)
 
 @app.route("/")
 def login():
-    return redirect(auth_url)
+    return redirect(AUTH_URL)
 
 @app.route("/callback")
 def callback():
