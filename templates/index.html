@@ -3,47 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MorningStarArise</title>
-
-    <!-- ✅ Correct Bootstrap CSS Link -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- ✅ Favicon Links -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
-
+    <title>Live Nifty Candlestick Chart</title>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
+    <h1>Live Nifty Candlestick Chart</h1>
+    <div id="chart-container" style="width: 800px; height: 400px;"></div>
 
-    <!-- ✅ Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">MorningStarArise</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-      
+    <script>
+        // Create a new Lightweight Chart
+        const chart = LightweightCharts.createChart(document.getElementById('chart-container'), {
+            width: 800,
+            height: 400,
+            layout: {
+                backgroundColor: '#ffffff',
+                textColor: '#000'
+            },
+            grid: {
+                vertLines: { color: '#e1e1e1' },
+                horzLines: { color: '#e1e1e1' }
+            }
+        });
 
-    <!-- ✅ Main Content -->
-    <div class="container text-center mt-5">
-        <h1 class="display-4">Welcome to MorningStarArise</h1>
-        <p class="lead">Your website is coming soon! Stay tuned for updates.</p>
-        <a href="#" class="btn btn-primary">Learn More</a>
-    </div>
+        // Add a candlestick series to the chart
+        const candlestickSeries = chart.addCandlestickSeries();
 
-    <!-- ✅ Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        // Function to fetch data from API
+        async function fetchChartData() {
+            try {
+                const response = await fetch('/api/nifty');
+                const data = await response.json();
 
+                // Update chart with data
+                candlestickSeries.setData(data);
+            } catch (error) {
+                console.error("Error fetching chart data:", error);
+            }
+        }
+
+        // Load chart data on page load
+        fetchChartData();
+
+        // Refresh data every 5 seconds
+        setInterval(fetchChartData, 5000);
+    </script>
 </body>
 </html>
