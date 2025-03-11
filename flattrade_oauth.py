@@ -1,3 +1,4 @@
+import os
 from flask import Flask, redirect, request, jsonify
 import requests
 import hashlib
@@ -8,7 +9,8 @@ API_KEY = "030593bbaa3440548be24f9deb39f5ee"
 API_SECRET = "2025.934665b7748a4027a5925557d954af7faaa5742f96c8e623"
 REDIRECT_URI = "https://morningstararise.onrender.com/callback"
 TOKEN_URL = "https://authapi.flattrade.in/trade/apitoken"
-TOKEN_FILE = "flattrade_token.json"  # File to store token
+
+TOKEN_FILE = "flattrade_token.json"
 
 app = Flask(__name__)
 
@@ -16,7 +18,6 @@ def save_token(token):
     """Save the access token to a JSON file."""
     with open(TOKEN_FILE, "w") as f:
         json.dump({"access_token": token}, f)
-    print("✅ Access Token saved successfully!")
 
 def load_token():
     """Load the access token from the file."""
@@ -25,7 +26,7 @@ def load_token():
             data = json.load(f)
             return data.get("access_token")
     except FileNotFoundError:
-        print("❌ Error: Token file not found. Please authenticate again.")
+        print("❌ Token file not found. Please authenticate again.")
         return None
 
 @app.route("/")
@@ -37,7 +38,7 @@ def login():
 @app.route("/callback")
 def callback():
     """Handle OAuth redirect from Flattrade"""
-    auth_code = request.args.get("code")  # Get request_code from URL
+    auth_code = request.args.get("code")
     if not auth_code:
         return "<h3 style='color:red'>❌ Authorization failed. No request_code received.</h3>"
 
@@ -58,10 +59,14 @@ def callback():
     if response.status_code == 200:
         token_data = response.json()
         access_token = token_data.get("token")
-        save_token(access_token)  # Save token for future use
+
+        # Save token to file
+        save_token(access_token)
+
         return f"<h3 style='color:green'>✅ Login successful! Access Token: {access_token}</h3>"
     else:
         return f"<h3 style='color:red'>❌ Token Exchange Failed: {response.text}</h3>"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))  # Ensure Flask binds to Render's provided PORT
+    app.run(host="0.0.0.0", port=port)
