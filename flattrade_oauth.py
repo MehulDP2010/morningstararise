@@ -68,8 +68,5 @@ def get_token():
 
 # Main entry point
 if __name__ == "__main__":
-   import os
-
-if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))  # Use PORT from Render or default to 10000
     app.run(host="0.0.0.0", port=port)
