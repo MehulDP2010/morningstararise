@@ -21,7 +21,8 @@ def login():
 @app.route("/callback")
 def callback():
     """Handle OAuth redirect from Flattrade."""
-    request_code = request.args.get("request_code")
+    request_code = request.args.get("code")  # Flattrade sends "code", not "request_code"
+
 
     if not request_code:
         return "❌ Authorization failed. No request_code received.", 400
